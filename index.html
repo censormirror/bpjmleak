@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Leak of the secret German Internet Censorship URL blacklist BPjM-Modul">
+<meta name="keywords" content="internet censorship, bpjm, bpjm-modul, germany, internetzensur, deutschland">
+<title>#BPjMleak &ndash; Leak of the secret German Internet Censorship URL blacklist BPjM-Modul</title>
+
+<style type="text/css">
+	header {overflow: hidden; color:white; background-color:black; width: 830px; margin-left: auto; margin-right: auto;}
+	blockquote {font-style:italic;}
+	article {overflow: hidden; padding:2px; border: 1px dotted black; float: left; width: 58%;}
+	aside {overflow: hidden; padding:2px; border: 1px dotted black; float: right; width: 39%;}  
+</style>
+
+<!--
+<script type="text/javascript">
+if (window.location.protocol != "https:")
+    window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+</script>
+-->
+</head>
+
+<body>
+<header>
+<pre>
+  88   88    88888888ba   88888888ba   88  88b           d88  88                          88         
+  88   88    88      "8b  88      "8b  ""  888b         d888  88                          88         
+aa88aaa88aa  88      ,8P  88      ,8P      88`8b       d8'88  88                          88         
+""88"""88""  88aaaaaa8P'  88aaaaaa8P'  88  88 `8b     d8' 88  88   ,adPPYba,  ,adPPYYba,  88   ,d8   
+aa88aaa88aa  88""""""8b,  88""""""'    88  88  `8b   d8'  88  88  a8P_____88  ""     `Y8  88 ,a8"    
+""88"""88""  88      `8b  88           88  88   `8b d8'   88  88  8PP"""""""  ,adPPPPP88  8888[      
+  88   88    88      a8P  88           88  88    `888'    88  88  "8b,   ,aa  88,    ,88  88`"Yba,   
+  88   88    88888888P"   88           88  88     `8'     88  88   `"Ybbd8"'  `"8bbdP"Y8  88   `Y8a  
+                                      ,88                                                            
+                                    888P"                                                            
+</pre>
+
+Found German secret Internet censorship list as hashes and recovered >99% of the URLs.<br>
+</header>
+<hr>
+
+
+
+<article>
+<strong>tl;dr: Germany has a censorship federal agency called BPjM which maintains a secret list of about 3000 URLs. To keep the list secret it is distributed in the form of md5 or sha1 hashes as the &quot;BPJM-Modul&quot;. They think this is safe. This leak explains in detail that it is in fact very easy to extract the hashed censorship list from home routers or child protection software and calculate the cleartext entries. It provides a first analysis of the sometimes absurd entries on such a governmental Internet censorship list.</strong>
+<br>
+<h3>Introduction to the BPjM</h3>
+<blockquote>The Federal Department for Media Harmful to Young Persons 
+(German: &quot;Bundespr&uuml;fstelle f&uuml;r jugendgef&auml;hrdende Medien&quot; or BPjM) is an upper-level German federal agency subordinate to the Federal Ministry of Family Affairs, Senior Citizens, Women and Youth. It is responsible for examining media works allegedly harmful to young people and entering these onto an official list &ndash; a process known as Indizierung (indexing) in German. The decision to index a work has a variety of legal implications.
+[...]
+Germany is the only western democracy with an organization like the BPjM. The rationales for earlier decisions to add works to the index are, in retrospect, incomprehensible reactions to moral panics.
+<br>
+<a href="https://en.wikipedia.org/wiki/Federal_Department_for_Media_Harmful_to_Young_Persons">Quote by Wikipedia</a>
+</blockquote>
+
+The censorship list (&quot;index&quot;) is split into various sublists:<br>
+<ul>
+<li>Sublist A: Works that are harmful to young people</li>
+<li>Sublist B: Works whose distribution is prohibited under the Strafgesetzbuch (German Criminal Code) (in the opinion of the BPjM)</li>
+<li>Sublist E: Entries prior to April 1, 2003</li>
+<li>Sublist C: All indexed virtual works harmful to young people whose distribution is prohibited under Article 4 of the Jugendmedienschutz-Staatsvertrag</li>
+<li>Sublist D: All indexed virtual works, which potentially have content whose distribution is prohibited under the Strafgesetzbuch.</li>
+</ul>
+The sublists A, B and E contain about 3000 movies, 400 games, 900 printed works and 400 audio recordings. That sublists are quarterly published in the magazine &quot;BPjM-aktuell&quot; which can be read in any major library in Germany.<br>
+<br>
+The sublists C and D were as well published in BPjS-aktuell (now BPjM-aktuell) up to <a href="http://www.docdroid.net/cc7d/bpjs-aktuell-2003-01.pdf.html">edition 2003-01</a>.<br>
+Since then the list of indexed virtual media is considered secret. As of July 2014 it contains more than 3000 URLs.<br>
+<br>
+In order to make use of a secret censoring list the BPjM offers the &quot;BPjM-Modul&quot;, which is a list of cryptographic hashes representing the censored URLs. The list is distributed about once per month to more than 27 companies who offer child protection software or DSL/Cable routers (for example <a href="http://www.avm.de/">AVM FRITZ!Box Router</a>, <a href="http://www.draytek.de/jugendschutz.html">Draytek Vigor Router</a>, <a href="http://tarife-und-produkte.t-online.de/mit-kinderschutz-software-surfen-ihre-kinder-sicher-im-internet-/id_12727562/index">Telekom Kinderschutz Software</a>, <a href="http://www.salfeld.de/">Salfeld Kindersicherung</a> and Cybits <a href="http://www.jugendschutzprogramm.de/">JusProg</a> and <a href="http://www.surf-sitter.de/">Surfsitter</a>). This companies usually implement the blocklist as opt-in &ndash; users have to enable it by choice to filter the websites. Additionally, the major search engines like Google, Bing or Yahoo agreed to filter their results in Germany based on the list. They can download the (cleartext) list from a server of the <a href="https://de.wikipedia.org/wiki/Freiwillige_Selbstkontrolle_Multimedia-Diensteanbieter">FSM (Freiwillige Selbstkontrolle Multimedia-Diensteanbieter e. V.)</a>. In comparison to the opt-in approach by the router manufacturers the search engines filter all results served to German users, it is not possible to opt-out.<br>
+<br>
+In 2011, <a href="http://www.pornoanwalt.de/">&quot;porno lawyer&quot; Marko D&ouml;rre</a> requested access to the list in order to do his work. This was denied two years later in curt decision <a href="https://www.justiz.nrw.de/nrwe/ovgs/vg_koeln/j2013/13_K_7107_11_Urteil_20130704.html">VG K&ouml;ln, 2013-07-04 &ndash; 13 K 7107/11</a> stating publication of the list could harm public safety. The curt further justifies its decision by stating that there are agreements with the 27 companies which have access to the hashed blacklist in place to ensure the list stays secret. This methods could be considered safe as there is no unauthorized use of the module data known since its creation in 2005.<br>
+<br>
+This leak proves that the BPjM-Modul is not a secure way to distribute a secret Internet censorship list. It is not difficult at all to extract the list from different sources and calculate the cleartext URLs of the hashes. It proves as well that secret Internet censorship lists are of bad quality, with many outdated and absurd entries harming legitimate businesses.
+<br>
+
+<h3>BPjM-Modul implementations</h3>
+There are at least three different technical implementations of the BPjM-Modul currently in use:
+<ul>
+<li>the search engines <a href="http://www.pornoanwalt.de/wp-content/uploads/2012/06/MoU.pdf">receive the URL list of the BPjM-Modul encrypted via OpenPGP</a> which they can decrypt to the cleartext</li>
+<li>a list with separate md5 hashes for domain and path part of the URL and two bits for indicating the depth of the URL, as used by by the <a href="https://build.opensuse.org/package/show/home:openschoolserver/bpjm-openschool">Openschoolserver</a>, AVM FRITZ!Box and an unknown implementation <a href="ftp://ftp.heanet.ie/disk1/download.sourceforge.net/pub/sourceforge/b/bp/bpjm/">uploaded to SourceForge</a></li>
+<li>a <span style="font-family:Courier">BPjMInspect.dll</span> file which downloads a bpjmlist.xml with salted sha1 hashes as used by the Telekom Kinderschutzsoftware</li>
+</ul>
+Both implementations using hashes will be described in detail below.
+
+<h4>BPjM-Modul implementation with separate md5 hashes for domain and path</h4>
+This format is for example used by AVM on the FRITZ!Box cable/DSL routers.
+<br><br>
+Each entry consists of 3 hex values:
+<ui>
+<li><strong>domain</strong> &ndash; md5 hash of the domain of the entry. The cleartext always starts with &quot;http://&quot; and never contains the www subdomain (but may contain other subdomains like www3). For example <span style="font-family:Courier">d7d6c7dd3e6592ab4d2c88b7305d6f20</span> is the md5 hash of &quot;http://youporn.com&quot;.</li>
+<li><strong>path</strong> &ndash; md5 hash of the URL path of the entry without a slash in the beginning, in most cases it is <span style="font-family:Courier">d41d8cd98f00b204e9800998ecf8427e</span> for an empty string (=complete domain blocked). Another example would be <span style="font-family:Courier">eacf331f0ffc35d4b482f1d15a887d3b</span> for &quot;index.html&quot;.</li>
+<li><strong>depth</strong> &ndash; Two bits representing the &quot;path length&quot; of the entry. Mostly it's 00 for no depth, which means the complete domain is blocked. The value 00 is used as well if the entry represents a certain filename but no directory, like &quot;index.html&quot;. 01 stands for an entry with at least one slash, like &quot;directory/&quot;. The highest depth seen so far is 04 for an entry like &quot;dir/foo/bar/bla/&quot;.</li>
+</ui>
+<br>
+<h4>BPjM-Modul implementation with salted sha1 hash of the URL</h4>
+The child protection software &quot;Telekom Kindersicherung&quot; includes a BPjM-Modul which is quite different to the (apparently older) md5 implementation. The software ships with the 143kb file <span style="font-family:Courier">BPjMInspect.dll</span> which downloads new blacklists from the t-online.de webserver as a XML file. The structure of the XML file is as follows:<br>
+<xmp>
+<?xml version="1.0" encoding="utf-8" ?>
+<bpjmencodedlist>
+	<table_a>
+		<entry>00168D58328DF6363331B6CD944F2B9EC14A9DF366E9</entry>
+		...
+		<entry>000EAEA17218F15DCDEC54752360A91C7CBFF96BC1E9</entry>
+	</table_a>
+	<table_b>
+		<entry>000EB30D02BE3A08A34D75271E66DC3B4804E80292FC</entry>
+		...
+		<entry>0020CDCBB0EE01AD4989FD299659BB22B202C4963CDF</entry>
+	</table_b>
+	<table_c>
+		<entry>001A23D76FDFD2C50B58ECC48DA200864DB6309E8230</entry>
+		...
+		<entry>003539FE72A1CBE73A2E97537A893293D82B76CAC260</entry>
+	</table_c>
+</bpjmencodedlist>
+</xmp>
+<br>
+Each entry is a 44 bit hexadecimal upper case string. The first 4 bit represent the size of the cleartext string in binary notation. The other 40 bit are the sha1 hash of the domain or URL with the appended salt &quot;To200-X&quot; and without &quot;http://&quot; or the www subdomain.
+Table A contains 2816 entries of just domains, table B contains 115 domains with one depth value, for example &quot;yildizporn.com/tube.htm&quot; or &quot;tubetubetube.com/tube&quot;. Finally, table C contains 85 domains with more than one depth value, for example &quot;youtube.com/user/Saifulhaakim&quot; or &quot;vidyotup.com/video/126690/Kafa-Kesme-18&quot;.<br>
+Example: The first entry of table A is <span style="font-family:Courier">00168D58328DF6363331B6CD944F2B9EC14A9DF366E9</span> which stands for the domain &quot;06111960.over-blog.com&quot;. The first 4 bit represent the size of the cleartext string in bytes, in this case the cleartext string has 22 characters which is 0x16 in unsigned binary. The sha1 hash of the string &quot;06111960.over-blog.comTo200-X&quot; is <span style="font-family:Courier">8D58328DF6363331B6CD944F2B9EC14A9DF366E9</span>.<br>
+According to the HTTP headers the file that was served in June 2014 was last modified on 2013-12-20. According to the filenames used by AVM the list 2013-12 was released on that day: 20131220_bpjm-modul_12_13.txt.
+<br>
+
+<h3>Get the BPjM-Modul blacklist</h3>
+The easiest way to obtain the BPjM-Modul blacklist is by just downloading the ones from <a href="ftp://ftp.heanet.ie/disk1/download.sourceforge.net/pub/sourceforge/b/bp/bpjm/">SourceForge</a> or the <a href="https://build.opensuse.org/package/show/home:openschoolserver/bpjm-openschool">Openschoolserver project</a>.
+These lists are quite old.<br>
+<br>
+You can download the last few lists here as well:<br>
+<a href="20130822_bpjm-modul_08_13.txt">20130822_bpjm-modul_08_13.txt</a><br>
+<a href="20131220_bpjm-modul_12_13.txt">20131220_bpjm-modul_12_13.txt</a><br>
+<a href="20140203_bpjm-modul_01_14.txt">20140203_bpjm-modul_01_14.txt</a><br>
+<a href="20140221_bpjm-modul_02_14.txt">20140221_bpjm-modul_02_14.txt</a><br>
+<a href="20140403_bpjm-modul_03_14.txt">20140403_bpjm-modul_03_14.txt</a><br>
+<a href="20140513_bpjm-modul_04_14.txt">20140513_bpjm-modul_04_14.txt</a><br>
+<a href="20140530_bpjm-modul_05_14.txt">20140530_bpjm-modul_05_14.txt</a><br>
+<a href="20140701_bpjm-modul_06_14.txt">20140701_bpjm-modul_06_14.txt</a><br>
+<br>They are extracted from a AVM FRITZ!Box. <a href="https://en.wikipedia.org/wiki/AVM_GmbH">AVM</a> is a German company producing mainly DSL/Cable routers. About half of all DSL/Cable routers in Germany are AVM FRITZ!Boxes. They support the BPjM-Modul and update the list about once per month even if you don't opt-in to use the filter. The firmware of the FRITZ!Boxes is based on Linux and telnet access can be easily activated. AVM ships an older BPjM blocklist in the file <span style="font-family:Courier">/etc/bpjm.data</span> and saves updated versions to <span style="font-family:Courier">/var/bpjm.data</span> or <span style="font-family:Courier">/var/media/ftp/FRITZ/bpjm.data</span> (depending on the firmware).<br>
+<br>
+
+# Enable telnet on the FRITZ!Box by dialing <span style="font-family:Courier">#96*8*</span> with a connected phone (wait for the peep)<p>
+
+# Open a local netcat server on port 1234 in the terminal of your computer to receive the file<br>
+<span style="font-family:Courier">netcat -l -p 1234 > /tmp/bpjm.data</span>
+<p>
+# make a telnet connection to your FRITZ!Box in another terminal window<br>
+<span style="font-family:Courier">telnet fritz.box 23</span>
+<p>
+# Transfer the current BPjM-Modul database to your computer. If the file is not found, try /var/media/ftp/FRITZ/bpjm.data instead of /var/bpjm.data<br>
+<span style="font-family:Courier">cat /var/bpjm.data | nc [YOUR-LOCAL-IP] 1234</span><br>
+<p>
+# Convert the database from binary to hex (ignoring first 64 bytes) and save it with the original filename<br>
+<span style="font-family:Courier">od -t x1 -An -j 64 /tmp/bpjm.data | tr -d '\n ' > `strings /tmp/bpjm.data | head -n 1`</span>
+<p>
+# Split each entry into a separate line:<br>
+<span style="font-family:Courier">sed -i -e 's/.\{66\}/&amp;\n/g' 20140701_bpjm-modul_06_14.txt</span>
+<p>
+# Split each entry to domain, path, depth<br>
+<span style="font-family:Courier">sed -i 's/.\{32\}/&amp; /' 20140701_bpjm-modul_06_14.txt<br>
+sed -i 's/.\{65\}/& /' 20140701_bpjm-modul_06_14.txt</span>
+<p>
+
+<h4>BPjM-Modul blacklist from &quot;Telekom Kindersicherung&quot; (sha1 implementation)</h4>
+If the free child protection software Telekom Kindersicherung is installed on the PC, the BPJM-Modul blocklist is located at <span style="font-family:Courier">C:\ProgramData\T-Online\BPJM\bpjmlist.xml</span>
+<p>
+# Alternatively, download the BPjM blacklist from Telekom in the same way the software does<br>
+<span style="font-family:Courier">wget -d --header="Range: bytes=0-204799" --user-agent=&quot;BPjMModule&quot; --header=&quot;Cache-Control: no-cache&quot; http://www.t-online.de/bpjm/bpjmlist.xml</span><br>
+# Apparently T-Online now serves an empty file on that URL, the last version of this file is mirrored here: <a href="bpjmlist.xml">bpjmlist.xml</a>.
+<p>
+
+# Select all hashes, remove the tabs and convert to lower case<br>
+<span style="font-family:Courier">grep entry bpjmlist.xml | tr -d '\t' | tr [:upper:] [:lower:] > bpjmlist-sha1-telekom.txt</span>
+<p>
+# Remove the XML tags<br>
+<span style="font-family:Courier">sed -i &#39;s/&lt;entry&gt;//&#39; bpjmlist-sha1-telekom.txt<br>
+sed -i &#39;s/&lt;\/entry&gt;//&#39; bpjmlist-sha1-telekom.txt</span>
+<p>
+# remove the first 4 bit representing the size of the cleartext to get the plain sha1 hashes<br>
+<span style="font-family:Courier">sed -i 's/^....//' bpjmlist-sha1-telekom.txt</span>
+<p>
+
+<h3>Calculate the cleartext</h3>
+
+To calculate the cleartext of the md5 (or sha1) hashes on the list the tool <a href="https://hashcat.net/">hashcat</a> was used. Brute-forcing hashes is possible, but since it is known what kind of cleartext to expect, it is much more effective to use lists of domains as a wordlist. There are many ways to collect huge wordlists/dictionaries of domains: 
+<ul>
+<li>leaked Internet censorship blacklists from other countries, like the ones from 
+<a href="https://www.wikileaks.org/wiki/Denmark:_3863_sites_on_censorship_list%2C_Feb_2008">Denmark</a>, 
+<a href="https://www.wikileaks.com/wiki/797_domains_on_Finnish_Internet_censorship_list%2C_including_censorship_critic%2C_2008">Finnland</a>, 
+<a href="https://www.wikileaks.org/wiki/Category:Series/MICT_blocklists">Thailand</a>, 
+<a href="https://www.wikileaks.org/wiki/Norwegian_secret_internet_censorship_blacklist,_3518_domains,_18_Mar_2009">Norway</a>, 
+<a href="https://www.wikileaks.org/wiki/A_Blacklist_for_Websites_Backfires_in_Australia">Australia</a>, 
+<a href="http://pastehtml.com/view/bz8kycy0o.html">India</a> 
+<a href="http://www.scribd.com/doc/103723216/india-government-urls">(2)</a>, 
+<a href="http://www.engelliweb.com/">Turkey</a>, 
+<a href="http://reestr.rublacklist.net/">Russia</a>, 
+<a href="https://wikileaks.org/wiki/Italian_secret_internet_censorship_list,_287_site_subset,_21_Jun_2009">Italy</a> and
+<a href="http://www.lapsiporno.info/blocked.glocalnet">Sweden</a></li>
+<li>free and commercial proxy blacklists like <a href="http://urlblacklist.com/?sec=download">URLblacklist.com</a>, <a href="http://dsi.ut-capitole.fr/blacklists/index_en.php">ut-capitole.fr</a>, <a href="http://www.squidblacklist.org/">squidblacklist.org</a> and <a href="http://www.shallalist.de/">shallalist.de</a></li>
+<li>current and old <a href="http://s3.amazonaws.com/alexa-static/top-1m.csv.zip">Alexa top million</a> and <a href="http://ak.quantcast.com/quantcast-top-million.zip">Quantcast top million</a> lists</li>
+<li>several registrars provide access to their complete zone files, for example: .com/.net/.org/.info/.name/.xxx/.travel/.asia/.ru/.su/.рф/.pro/.aero/.mobi/.cat/.jobs and .coop</li>
+<li>passive DNS databases like <a href="https://dnscensus2013.neocities.org/">dnscensus2013</a>, <a href="http://labs.umbrella.com/2013/10/04/zeromq-helping-us-block-malicious-domains/">OpenDNS Umbrella Labs</a>, &quot;whois -h sim.cert.ee example.com&quot;, <a href="https://www.dnsdb.info/">ISC DNSDB</a> and <a href="http://pdns.circl.lu/">CIRCL pDNS</a></li>
+<li>rDNS scans like the ones from <a href="https://scans.io/study/sonar.rdns">scans.io</a>, <a href="http://internetcensus2012.bitbucket.org/tld_overview.html">internetcensus2012</a> and <a href="https://deepmagic.com/">deepmagic.com</a></li>
+<li>DNS AXFR Zone transfers <a href="http://www.floyd.ch/?p=344">where available</a></li>
+<li><a href="http://www.docdroid.net/cc7d/bpjs-aktuell-2003-01.pdf.html">BPjS-aktuell 2003-01</a>, the last magazine issue with the list of indexed websites</li>
+<li><a href="http://www.verfassungsschutz.sachsen.de/download/Internetatlas_2013.pdf">Internetatlas 2013 by Verfassungsschutz Sachsen</a>, a huge list of nationalist websites</li>
+<li><a href="http://archiveteam.org/index.php?title=Archive.is">archive.today "alldomains" list</a></li>
+</ul>
+Just with the <a href="https://dnscensus2013.neocities.org/">dnscensus2013</a> data it is possible to recover 2694 of the 3106 unique domains (86.74%) of the current BPjM-Modul blacklist.
+<br>
+<br>
+For calculating the cleartext of the BPjM-Modul blacklist the md5 implementation was mostly used, since calculating md5 hashes is faster than calculating sha1 hashes, the segmentation of domains and URL paths in the md5 implementation made it easier to calculate the cleartext and the available lists are newer than the Telekom sha1 list.
+Recovering the md5 hashes of the URL path was most effective using plain brute-force for the short paths and manual examination of the <a href="https://en.wikipedia.org/wiki/Sitemaps">sitemap.xml</a> for the more complex ones.<br>
+Hashcat was used like this:<br>
+<span style="font-family:Courier">./hashcat-cli64.bin -r rules.txt md5hashes.txt dictionary.txt -o results.txt</span><br>
+with different rules depending on the format of the used dictionary file, the most important one being <span style="font-family:Courier">^/^/^:^p^t^t^h</span> for prepending <span style="font-family:Courier">http://</span>
+<br><br>
+Currently the cleartext of 3280 unique md5 hashes has been recovered, see <a href="bpjm-md5hashes-plaintext.txt">bpjm-md5hashes-plaintext.txt</a>.<br>
+Additionally, 2889 sha1 hashes could be calculated, see <a href="bpjm-sha1hashes-plaintext.txt">bpjm-sha1hashes-plaintext.txt</a>.
+<br>
+Because of the wide array of sources for lists of domains it is believed that the missing md5 hashes of domains are either typos, domains which are not registered anymore or domains with very low traffic.
+<br>
+<h3>Analysis of the list entries</h3>
+Most entries on the list can be categorized as either: normal porn, animal porn, child/teen porn, violence, suicide, nazi or anorexia.
+
+<strong>On only about 50-60% of the domains on the list the questionable content is still accessible:
+About 10% of the domains are not registered at all, another 10% are parked domains, and about 20% don't provide any content at all (either no DNS A record, no webserver on port 80 or a redirect to another domain).</strong><br>
+It would be great to analyze this list similar to the work of <a href="http://maraz.kapsi.fi/sisalto-en.html"> Matti Nikki on the list from Finnland</a> and <a href="http://ak-zensur.de/2010/09/29/analysis-blacklists.pdf">AK-Zensur on the lists from Denmark and Sweden</a>.
+<br>
+<br>
+Some noteworthy findings:
+<ul>
+<li>the domain &quot;homo.com&quot; offers a wildcard domain which echoes anything that is entered as a subdomain on the website, eg. visiting &quot;Fritz.homo.com&quot; results in a webpage &quot;Haha, Fritz is gay!&quot;. On the BPjM list there is a entry <strong>irgend.ein.name.homo.com</strong> &ndash; the German &quot;Irgend ein Name&quot; stands for &quot;any name&quot;. Contrary to the belief of the BPjM public servants this doesn't work as a wildcard &ndash; just this specific domain will be blocked</li>
+<li>there are some domains with upper case letters on the list (<strong>ExtremeAdultSex.com</strong>, <strong>FUQQER.com</strong>, <strong>HQBoys.com</strong> and <strong>painGate.com</strong>). This implies that eiter the calculation of the md5 hash is in fact case sensitive, which would mean that only &quot;youporn.com&quot; is filtered but &quot;YouPorn.com&quot; or &quot;youporn.COM&quot; are not. However, it is more likely that domains are always converted to lower cases before calculating the md5 hash which would mean this 4 domains will never get filtered. For more details on URL normalization see <a href="https://en.wikipedia.org/wiki/URL_normalization">Wikipedia</a> and <a href="https://tools.ietf.org/html/rfc3986#section-6">RFC3986</a></li>
+<li>the listing of the XBOX 360 game &quot;Dead Island&quot; on <strong>amazon.co.uk</strong> is blocked</li>
+<li>the complete sell list of leading online music database <strong>Discogs</strong>. Probably at one point in time there was a listing of a music album which is forbidden in Germany &ndash; this was enough to block access to the &quot;eBay of music&quot; for years</li>
+<li>the domain <strong>beyondthedot.com</strong> is blocked, where FairWinds Partners, LLC, a domain name consulting firm explains the new generic top level domains. According to archive.org this was a porn website up to about 2008</li>
+<li>the free website hosting on <strong>mywebpage.netscape.com</strong> was shut down at least 5 years ago but there is still a URL on the list</li>
+<li>besides all the porn domains the trustworthy looking domain <strong>bible.org</strong> stands out. One article glorifying beating up kids for &quot;education&quot; is blocked</li>
+<li>lyrics of severals songs are blocked:
+	<ul>
+	<li>Frei.Wild &ndash; Rache muss sein</li>
+	<li>Landser &ndash; Zigeunerpack</li>
+	<li>Normahl &ndash; Bullenschweine</li>
+	<li>Wei&szlig;e W&ouml;lfe &ndash; Ruhm und Ehre</li>
+	<li>Swiss &ndash; Der letzte Schultag</li>
+	</ul>
+</li>
+<li>a German &quot;Call of Duty 4&quot; gameserver clan with a German .de domain: <strong>deutschefront.de</strong> &ndash; since it is a German domain hosted in Germany it should be possible to take other measures besides just blocking access to the domain</li>
+<li>many entries appear more than once on the list. The YouTube user pages of <strong>saberrien</strong> and <strong>Saifulhaakim</strong> are 4 times respectively 5 times on the list. However, there is not one single YouTube video itself blocked.</li>
+<li>several URLs with a wrong trailing slash:
+	<ul>
+	<li><strong>Death.html/</strong></li>
+	<li><strong>welcome.htm/</strong></li>
+	<li><strong>free/index.html/</strong></li>
+	<li><strong>freecontent.html/</strong></li>
+	</ul>
+A URL path with a trailing slash means that the part before the slash is a directory and not a file. The examples above are filenames. The entries on the list with the trailing slash are invalid and return a 404 file not found error. The correct URLs without the trailing slashes won't match the hash and are not blocked. <a href="http://webdesign.about.com/od/beginningtutorials/f/why-urls-end-in-slash.htm">Explanation here</a>
+</li>
+<li><strong>voy.com</strong> provides free message boards where each board has a numeric id, like &quot;voy.com/123456/&quot;. The BPjM wants to block five of those URLs with suicide forums. Only two of the entries contain the (in this case) correct trailing slash, the voy.com webserver redirects requests without trailing slash to those with a trailing slash. The other three entries will never be blocked if they are requested with the correct trailing slash.</li>
+<li>a website from the 1990s selling rusty old helmets: <strong>germanhelmetsinc.com</strong></li>
+<li>the French counterpart of German &quot;Jochen Schweizer&quot; adventure coupons: <strong>happytime.com</strong> - apparently this used to be a porn website several years ago</li>
+<li>since many years switched off website of 17(!) year old game &quot;Shadow Warrior&quot; <strong>3drealms.com/catalog/sw/</strong></li>
+<li>website of a 10+ year old game which since long redirects to the publisher: <strong>postal2.com</strong></li>
+<li>the domain <strong>kartoffelkanone.org</strong> (German for &quot;spud gun&quot;), which is not active since at least 2008</li>
+<li><strong>splashdamage.com/content/wolfenstein-enemy-territory-barracks</strong>, the website of the free-to-play game &quot;Wolfenstein: Enemy Territory&quot; which is rated &quot;PEGI: 16&quot; by the <a href="https://en.wikipedia.org/wiki/Pan_European_Game_Information">Pan European Game Information system</a></li>
+<li>audio books download portal <strong>hoerbuch.in</strong> is the only warez entry besides the XXX section of defunct <strong>movie2k.com</strong>. One explanation for this might be the porn advertisements on the website</li>
+<li><strong>bananenbar.com</strong> is the website of an Amsterdam strip bar with only modest content</li>
+<li>according to archive.org the domain <strong>facegoo.com</strong> is since at least 3 years not an porn website anymore. Now it is the website of an iPhone App for fun picture manipulation. The startup has no chance to be listed in German search engine results at all</li>
+<li><strong>ety.com/tell/</strong> according to archive.org used to be a Swiss nazi website &quot;last updated: 14.04.2001&quot; but now presents a startup beta invite screen</li>
+<li>several websites of the artist Alex Dirk Freyling are blocked (e.g. <strong>alexd.net</strong>, <strong>dieetwasandereart.net</strong>, <strong>macassar-art.com</strong> and <strong>neuexpressionismus.com</strong>). But other similar domains of the same artist are not blocked: derfreikuenstler.com, dualismus.net, kulturreportonline.net, adffilm.com, dfreyling.com etc.</li>
+<li>not on the current list, but older versions of the BPjM-Blacklist had plain typos: <strong>http://bilola</strong>, <strong>http://hot-soccer-moms-info</strong> and <strong>http://www-gangbang-squad.com</strong></li>
+</ul>
+
+<h3>About and contact</h3>
+Extracting the list and calculating the cleartext was no rocket science. Anyone interested in Internet censorship with a few hours of free time could have done this and several probably already did it. This leak is just to proof that the implementation of the BPjM-Module is not as safe as expected and that maintaining a secret Internet censorship list is wrong. Truly disgusting entries on the list, like child pornography, should be completely deleted from the Internet instead of filtered. The great <a href="http://ak-zensur.de/2010/09/29/analysis-blacklists.pdf">analysis of the Danish censorship list by AK-Zensur</a> proves that this is indeed possible.
+<br><br>
+I'd prefer to stay anonymous for now, but if you feel the need to contact me you can send an email to <strong>bpjmleak@riseup.net</strong>
+<br>
+</article>
+</body>
+</html>
